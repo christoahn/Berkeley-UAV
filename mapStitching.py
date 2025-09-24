@@ -52,7 +52,7 @@ class customStitching:
         import cv2
         import numpy as np
         pass
-    def stitch_images(self, images: list, threshold: int = 400):
+    def stitchImages(self, images: list, threshold: int = 400):
         surf = cv2.xfeatures2d.SURF_create(400)
         gray1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
         gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
@@ -62,7 +62,7 @@ class customStitching:
 
         return img_result
 
-    def stitch_images_orb(self, images: list, direction = 'vertical', maxFeatures: int = 1000):
+    def stitchImagesOrb(self, images: list, direction = 'vertical', maxFeatures: int = 1000):
         gray = list()
         orb = cv2.ORB_create(nfeatures=maxFeatures)
         for img in images:
@@ -111,7 +111,7 @@ class customStitching:
         cv2.destroyAllWindows()
         return result_img
 
-    def stitch_images_orb_v2(self, base_image, new_image, direction='horizontal', maxFeatures=2000):
+    def stitchImagesOrbV2(self, base_image, new_image, direction='horizontal', maxFeatures=2000):
         # Feature Detection and Matching
         gray1 = cv2.cvtColor(base_image, cv2.COLOR_BGR2GRAY)
         gray2 = cv2.cvtColor(new_image, cv2.COLOR_BGR2GRAY)
@@ -219,6 +219,12 @@ class customStitching:
             cv2.destroyAllWindows()
             cv2.imwrite('stitched_image.jpg', panorama)
             return panorama
+
+    def orbListStitching(self, images: list, direction='horizontal', maxFeatures=2000):
+        for i in range(len(images) - 1):
+            orb = self.stitchImagesOrbV2(images[i], images[i+1], direction, maxFeatures)
+            images[i+1] = orb
+        return images[-1]
 
 def main():
     # print(f"Current OpenCV version: {cv2.__version__}")
